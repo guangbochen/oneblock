@@ -1,0 +1,75 @@
+version: 1
+
+snapshot:
+  name_template: '{{ trimprefix .Summary "v" }}'
+
+
+builds:
+  - id: "oneblock"
+    binary: oneblock
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    tags:
+      - netgo
+    ldflags:
+      - -s -w -X "github.com/oneblock-ai/oneblock/pkg/version.Version=v{{ .Version }}"
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+    - "^docs:"
+    - "^test:"
+
+dockers:
+  - use: buildx
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile
+    image_templates:
+      - ghcr.io/oneblock-ai/oneblock:v{{ .Version }}-amd64
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/oneblock-ai/oneblock"
+      - "--platform=linux/amd64"
+  - use: buildx
+    goos: linux
+    goarch: arm64
+    dockerfile: Dockerfile
+    image_templates:
+      - ghcr.io/oneblock-ai/oneblock:v{{ .Version }}-arm64
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source=https://github.com/oneblock-ai/oneblock"
+      - "--platform=linux/arm64"
+
+docker_manifests:
+  - use: docker
+    name_template: ghcr.io/oneblock-ai/oneblock:v{{ .Version }}
+    image_templates:
+      - ghcr.io/oneblock-ai/oneblock:v{{ .Version }}-amd64
+      - ghcr.io/oneblock-ai/oneblock:v{{ .Version }}-arm64
+  - use: docker
+    name_template: ghcr.io/oneblock-ai/oneblock:latest
+    image_templates:
+      - ghcr.io/oneblock-ai/oneblock:v{{ .Version }}-amd64
+      - ghcr.io/oneblock-ai/oneblock:v{{ .Version }}-arm64
+
+docker_signs:
+  - artifacts: all
+    stdin: "{{ .Env.COSIGN_PASSWORD }}"

@@ -30,3 +30,5 @@ vendor
 main
 *.bc
 dist
+
+dist/
