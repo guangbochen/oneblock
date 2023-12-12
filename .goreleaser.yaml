@@ -1,8 +1,12 @@
 version: 1
 
 snapshot:
+  # https://goreleaser.com/customization/snapshots/
   name_template: '{{ trimprefix .Summary "v" }}'
 
+checksum:
+  # https://goreleaser.com/customization/checksum/
+  name_template: 'checksums.txt'
 
 builds:
   - id: "oneblock"
@@ -18,7 +22,9 @@ builds:
     tags:
       - netgo
     ldflags:
-      - -s -w -X "github.com/oneblock-ai/oneblock/pkg/version.Version=v{{ .Version }}"
+      - -s
+      - -w
+      - -X "github.com/oneblock-ai/oneblock/pkg/version.Version=v{{ .Version }}"
 
 changelog:
   use: github
@@ -32,7 +38,7 @@ dockers:
   - use: buildx
     goos: linux
     goarch: amd64
-    dockerfile: Dockerfile
+    dockerfile: package/Dockerfile
     image_templates:
       - ghcr.io/oneblock-ai/oneblock:v{{ .Version }}-amd64
     build_flag_templates:
@@ -43,10 +49,13 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/oneblock-ai/oneblock"
       - "--platform=linux/amd64"
+    extra_files:
+    - package/entrypoint.sh
+
   - use: buildx
     goos: linux
     goarch: arm64
-    dockerfile: Dockerfile
+    dockerfile: package/Dockerfile
     image_templates:
       - ghcr.io/oneblock-ai/oneblock:v{{ .Version }}-arm64
     build_flag_templates:
@@ -57,6 +66,8 @@ dockers:
       - "--label=org.opencontainers.image.version={{.Version}}"
       - "--label=org.opencontainers.image.source=https://github.com/oneblock-ai/oneblock"
       - "--platform=linux/arm64"
+    extra_files:
+      - package/entrypoint.sh
 
 docker_manifests:
   - use: docker
