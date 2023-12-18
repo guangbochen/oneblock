@@ -5,11 +5,13 @@ import (
 
 	controllergen "github.com/rancher/wrangler/v2/pkg/controller-gen"
 	"github.com/rancher/wrangler/v2/pkg/controller-gen/args"
+	rayv1 "github.com/ray-project/kuberay/ray-operator/apis/ray/v1"
 )
 
 const (
 	oneblockCoreGV = "core.oneblock.ai"
 	oneblockMgmtGV = "management.oneblock.ai"
+	rayGV          = "ray.io"
 )
 
 func main() {
@@ -34,6 +36,16 @@ func main() {
 					"./pkg/apis/management.oneblock.ai/v1",
 				},
 				GenerateTypes:   true,
+				GenerateClients: true,
+			},
+			rayGV: {
+				PackageName: rayGV,
+				Types: []interface{}{
+					rayv1.RayCluster{},
+					rayv1.RayJob{},
+					rayv1.RayService{},
+				},
+				GenerateTypes:   false,
 				GenerateClients: true,
 			},
 		},
