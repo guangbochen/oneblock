@@ -30,6 +30,7 @@ import (
 var (
 	DatasetResourceName  = "datasets"
 	NotebookResourceName = "notebooks"
+	ServiceResourceName  = "services"
 )
 
 // SchemeGroupVersion is group version used to register these objects
@@ -57,6 +58,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&DatasetList{},
 		&Notebook{},
 		&NotebookList{},
+		&MLServe{},
+		&ServiceList{},
 	)
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil

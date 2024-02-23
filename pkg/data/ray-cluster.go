@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	defaultRayClusterName = "public-ray-cluster"
+	defaultRayClusterName = "public-ml-cluster"
 	defaultRayPVCName     = defaultRayClusterName + "-log"
 )
 
@@ -213,7 +213,7 @@ func getDefaultRayCluster(releaseName string) (*rayv1.RayCluster, error) {
 								Image: fmt.Sprintf("rayproject/ray:%s", settings.RayVersion.Get()),
 								Ports: []corev1.ContainerPort{
 									{
-										Name:          "redis",
+										Name:          "gcs-server",
 										ContainerPort: 6379,
 									},
 									{
@@ -223,6 +223,10 @@ func getDefaultRayCluster(releaseName string) (*rayv1.RayCluster, error) {
 									{
 										Name:          "dashboard",
 										ContainerPort: 8265,
+									},
+									{
+										Name:          "serve",
+										ContainerPort: 8000,
 									},
 								},
 								Env: cluster.GetHeadNodeRedisEnvConfig(releaseName, constant.PublicNamespaceName),

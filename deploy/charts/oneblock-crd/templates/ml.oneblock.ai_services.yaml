@@ -1,0 +1,214 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    {}
+  name: services.ml.oneblock.ai
+spec:
+  group: ml.oneblock.ai
+  names:
+    kind: Service
+    listKind: ServiceList
+    plural: services
+    singular: service
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: AGE
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: Service is the Schema for the ML application service
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              applications:
+                items:
+                  properties:
+                    args:
+                      additionalProperties:
+                        type: string
+                      type: object
+                    deployments:
+                      items:
+                        properties:
+                          gracefulShutdownTimeoutS:
+                            type: string
+                          gracefulShutdownWaitLoopS:
+                            type: string
+                          healthCheckPeriodS:
+                            type: string
+                          healthCheckTimeoutS:
+                            type: string
+                          maxConcurrentQueries:
+                            format: int32
+                            type: integer
+                          name:
+                            type: string
+                          numReplicas:
+                            format: int32
+                            type: integer
+                          rayActorOptions:
+                            items:
+                              type: string
+                            type: array
+                          userConfig:
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      type: array
+                    importPath:
+                      type: string
+                    loggingConfig:
+                      properties:
+                        enableAccessLog:
+                          type: boolean
+                        encoding:
+                          type: string
+                        logDir:
+                          type: string
+                        logLevel:
+                          type: integer
+                      type: object
+                    name:
+                      type: string
+                    routePrefix:
+                      type: string
+                    runtimeEnv:
+                      additionalProperties:
+                        items:
+                          type: string
+                        type: array
+                      type: object
+                    url:
+                      type: string
+                  type: object
+                type: array
+              rayClusterRef:
+                properties:
+                  name:
+                    type: string
+                  namespace:
+                    type: string
+                type: object
+            required:
+            - rayClusterRef
+            type: object
+          status:
+            properties:
+              conditions:
+                description: Conditions is an array of current conditions
+                items:
+                  properties:
+                    lastTransitionTime:
+                      description: Last time the condition transitioned from one status
+                        to another.
+                      format: date-time
+                      type: string
+                    lastUpdateTime:
+                      description: The last time this condition was updated.
+                      format: date-time
+                      type: string
+                    message:
+                      description: Human-readable message indicating details about
+                        last transition
+                      type: string
+                    reason:
+                      description: The reason for the condition's last transition.
+                      type: string
+                    status:
+                      description: Status of the condition, one of True, False, Unknown.
+                      type: string
+                    type:
+                      description: Type of the condition.
+                      type: string
+                  required:
+                  - status
+                  - type
+                  type: object
+                type: array
+              state:
+                description: ContainerState holds a possible state of container. Only
+                  one of its members may be specified. If none of them is specified,
+                  the default one is ContainerStateWaiting.
+                properties:
+                  running:
+                    description: Details about a running container
+                    properties:
+                      startedAt:
+                        description: Time at which the container was last (re-)started
+                        format: date-time
+                        type: string
+                    type: object
+                  terminated:
+                    description: Details about a terminated container
+                    properties:
+                      containerID:
+                        description: Container's ID in the format '<type>://<container_id>'
+                        type: string
+                      exitCode:
+                        description: Exit status from the last termination of the
+                          container
+                        format: int32
+                        type: integer
+                      finishedAt:
+                        description: Time at which the container last terminated
+                        format: date-time
+                        type: string
+                      message:
+                        description: Message regarding the last termination of the
+                          container
+                        type: string
+                      reason:
+                        description: (brief) reason from the last termination of the
+                          container
+                        type: string
+                      signal:
+                        description: Signal from the last termination of the container
+                        format: int32
+                        type: integer
+                      startedAt:
+                        description: Time at which previous execution of the container
+                          started
+                        format: date-time
+                        type: string
+                    required:
+                    - exitCode
+                    type: object
+                  waiting:
+                    description: Details about a waiting container
+                    properties:
+                      message:
+                        description: Message regarding why the container is not yet
+                          running.
+                        type: string
+                      reason:
+                        description: (brief) reason the container is not yet running.
+                        type: string
+                    type: object
+                type: object
+            required:
+            - conditions
+            - state
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

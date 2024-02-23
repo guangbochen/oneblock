@@ -1,0 +1,12 @@
+apiVersion: ml.oneblock.ai.1block.ai/v1
+kind: Dataset
+metadata:
+  labels:
+    app.kubernetes.io/name: dataset
+    app.kubernetes.io/instance: dataset-sample
+    app.kubernetes.io/part-of: oneblock
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: oneblock
+  name: dataset-sample
+spec:
+  # TODO(user): Add fields here

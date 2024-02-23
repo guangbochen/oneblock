@@ -10,6 +10,7 @@ import (
 	"github.com/oneblock-ai/oneblock/pkg/controller/gpu"
 	"github.com/oneblock-ai/oneblock/pkg/controller/kuberay/cluster"
 	"github.com/oneblock-ai/oneblock/pkg/controller/notebook"
+	"github.com/oneblock-ai/oneblock/pkg/controller/serve"
 	"github.com/oneblock-ai/oneblock/pkg/controller/setting"
 	"github.com/oneblock-ai/oneblock/pkg/controller/user"
 	"github.com/oneblock-ai/oneblock/pkg/indexeres"
@@ -28,6 +29,7 @@ var registerFuncs = []registerFunc{
 	cluster.Register,
 	gpu.Register,
 	notebook.Register,
+	serve.Register,
 }
 
 func register(ctx context.Context, mgmt *config.Management) error {

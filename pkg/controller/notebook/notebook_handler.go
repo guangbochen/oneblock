@@ -270,7 +270,7 @@ func getService(notebook *mlv1.Notebook, svcName string) *corev1.Service {
 	if notebook.Spec.ServiceType != "" {
 		svcType = notebook.Spec.ServiceType
 	}
-	// Define the desired Service object
+	// Define the desired MLServe object
 	port := DefaultContainerPort
 	containerPorts := notebook.Spec.Template.Spec.Containers[0].Ports
 	if containerPorts != nil {

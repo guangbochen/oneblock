@@ -21,3 +21,5 @@ package v1
 type DatasetExpansion interface{}
 
 type NotebookExpansion interface{}
+
+type ServiceExpansion interface{}

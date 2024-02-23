@@ -30,6 +30,7 @@ type MlV1Interface interface {
 	RESTClient() rest.Interface
 	DatasetsGetter
 	NotebooksGetter
+	ServicesGetter
 }
 
 // MlV1Client is used to interact with features provided by the ml.oneblock.ai group.
@@ -43,6 +44,10 @@ func (c *MlV1Client) Datasets(namespace string) DatasetInterface {
 
 func (c *MlV1Client) Notebooks(namespace string) NotebookInterface {
 	return newNotebooks(c, namespace)
+}
+
+func (c *MlV1Client) Services(namespace string) ServiceInterface {
+	return newServices(c, namespace)
 }
 
 // NewForConfig creates a new MlV1Client for the given config.

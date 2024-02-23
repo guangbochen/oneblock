@@ -33,6 +33,7 @@ func init() {
 type Interface interface {
 	Dataset() DatasetController
 	Notebook() NotebookController
+	Service() ServiceController
 }
 
 func New(controllerFactory controller.SharedControllerFactory) Interface {
@@ -51,4 +52,8 @@ func (v *version) Dataset() DatasetController {
 
 func (v *version) Notebook() NotebookController {
 	return generic.NewController[*v1.Notebook, *v1.NotebookList](schema.GroupVersionKind{Group: "ml.oneblock.ai", Version: "v1", Kind: "Notebook"}, "notebooks", true, v.controllerFactory)
+}
+
+func (v *version) Service() ServiceController {
+	return generic.NewController[*v1.MLServe, *v1.ServiceList](schema.GroupVersionKind{Group: "ml.oneblock.ai", Version: "v1", Kind: "MLServe"}, "services", true, v.controllerFactory)
 }

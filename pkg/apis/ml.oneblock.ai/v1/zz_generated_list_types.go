@@ -57,3 +57,20 @@ func NewNotebook(namespace, name string, obj Notebook) *Notebook {
 	obj.Namespace = namespace
 	return &obj
 }
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ServiceList is a list of MLServe resources
+type ServiceList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+
+	Items []MLServe `json:"items"`
+}
+
+func NewService(namespace, name string, obj MLServe) *MLServe {
+	obj.APIVersion, obj.Kind = SchemeGroupVersion.WithKind("MLServe").ToAPIVersionAndKind()
+	obj.Name = name
+	obj.Namespace = namespace
+	return &obj
+}
