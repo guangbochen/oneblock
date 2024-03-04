@@ -3,6 +3,8 @@ package controller
 import (
 	"context"
 
+	"github.com/oneblock-ai/oneblock/pkg/controller/mlservice"
+	"github.com/oneblock-ai/oneblock/pkg/controller/modeltemplate"
 	"github.com/rancher/wrangler/v2/pkg/leader"
 
 	obAuth "github.com/oneblock-ai/oneblock/pkg/controller/auth"
@@ -28,6 +30,8 @@ var registerFuncs = []registerFunc{
 	cluster.Register,
 	gpu.Register,
 	notebook.Register,
+	modeltemplate.Register,
+	mlservice.Register,
 }
 
 func register(ctx context.Context, mgmt *config.Management) error {
